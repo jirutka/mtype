@@ -25,5 +25,9 @@ build = {
   type = 'builtin',
   modules = {
     ['mtype'] = 'mtype/init.lua',
+    ['mtype.pure'] = 'mtype/pure.lua',
+    ['mtype.native'] = {
+      sources = 'src/native.c',
+    },
   },
 }

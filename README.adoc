@@ -1,0 +1,58 @@
+= mtype – efficient meta types for Lua
+Jakub Jirutka <https://github.com/jirutka[@jirutka]>
+:source-language: lua
+// custom
+:name: mtype
+:gh-name: jirutka/{name}
+:gh-branch: master
+
+ifdef::env-github[]
+image:https://travis-ci.org/{gh-name}.svg?branch={gh-branch}["Build Status", link="https://travis-ci.org/{gh-name}"]
+endif::env-github[]
+
+TODO
+
+
+== Installation
+
+You can install {name} using https://luarocks.org[LuaRocks] (the Lua package manager):
+
+[source, subs="+attributes"]
+luarocks install {name}
+
+or to get the latest development version:
+
+[source, subs="+attributes"]
+luarocks install --server=http://luarocks.org/dev {name}
+
+Note: If you want to bootstrap development environment for running tests, read the next section.
+
+
+== Set up development environment
+
+. Clone this repository:
+[source, subs="+attributes"]
+git clone https://github.com/{gh-name}.git
+cd {name}
+
+. Source file `.envrc` into your shell (or manually add `$(pwd)/.venv/bin` to your `PATH`):
+
+    source .envrc
+
+. Install Lua and modules for running tests into directory `.venv`:
+
+    ./script/bootstrap
+
+. Start hacking!
+
+//^
+
+* Run tests and linters:
+
+    ./script/test
+
+
+== License
+
+This project is licensed under http://opensource.org/licenses/MIT/[MIT License].
+For the full text of the license, see the link:LICENSE[LICENSE] file.

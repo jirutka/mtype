@@ -1,6 +1,6 @@
 = mtype – efficient meta types for Lua
 Jakub Jirutka <https://github.com/jirutka[@jirutka]>
-:source-language: lua
+:source-language: sh
 // custom
 :name: mtype
 :gh-name: jirutka/{name}
@@ -10,7 +10,39 @@ ifdef::env-github[]
 image:https://travis-ci.org/{gh-name}.svg?branch={gh-branch}["Build Status", link="https://travis-ci.org/{gh-name}"]
 endif::env-github[]
 
-TODO
+{name} is a library that provides an enhanced version of the https://www.lua.org/manual/5.3/manual.html#pdf-type[type] function that looks for `__type` metafield on a table.
+For best performance it’s implemented both in Lua (for LuaJIT) and C (for Lua/PUC).
+
+
+The Lua builtin function `type` has a disadvantage: it only returns a “primitive” Lua type of a value.
+So if you want to implement your own typing system with custom type names, `type` won't provide you any interesting information:
+
+[source]
+local chair = setmetatable({}, { __type = 'Chair' })
+print(type(chair))  -- prints 'table'
+
+Some libraries (such as the I/O library included with standard Lua) offer alternative type functions for identifying types used within that library:
+
+[source, lua]
+local value = io.open('/dev/null')
+print(io.type(value))  -- prints 'file'
+
+{name} allows you to define your own type tags:
+
+[source, lua]
+----
+local type = require 'mtype'
+
+local chair = setmetatable({}, { __type = 'Chair' })
+print(type(chair))  -- prints 'Chair'
+
+print(type('allons-y!'))  -- prints 'string'
+print(type(io.open('/dev/null')))  -- prints 'file'
+----
+
+{name} is _very_ simple: it looks for a `\__type` metafield on a table.
+If it’s a function, it passes the value to the function and uses the result as the type name.
+If it’s a string, it uses that. If `__type` is `nil` or returns `nil`, the builtin `io.type` or `type` is used.
 
 
 == Installation
@@ -47,9 +79,53 @@ cd {name}
 
 //^
 
+* Build native extension:
+
+    ./script/build
+
 * Run tests and linters:
 
     ./script/test
+
+* Run benchmarks:
+
+    lua bench.lua
+
+
+== Performance
+
+=== Lua 5.3.4
+
+|===
+| value                    | type | mtype (pure) | mtype (native)
+
+| number                   | 1.0  | 2.3          | 1.1
+| string                   | 1.0  | 2.2          | 1.2
+| table without __type     | 1.0  | 5.0          | 1.6
+| table with string __type | 1.0  | 4.9          | 1.4
+| table with func __type   | 1.0  | 6.3          | 2.4
+|===
+
+
+=== LuaJIT 2.1 (disabled JIT)
+
+|===
+| value                    | type | mtype (pure) | mtype (native)
+
+| number                   | 1.0  | 1.7          | 2.7
+| string                   | 1.0  | 1.7          | 2.6
+| table without __type     | 1.0  | 2.4          | 3.3
+| table with string __type | 1.0  | 2.6          | 2.6
+| table with func __type   | 1.0  | 2.9          | 3.0
+|===
+
+Note: These numbers are measured with disabled JIT, so they represent the _worst case_.
+When you run this benchmark with enabled JIT, then “type” and “mtype (pure)” finishes basically in no time.
+
+
+== Acknowledgement
+
+This library is functionally the same as https://github.com/hoelzro/lua-typical[lua-typical], just _much_ faster.
 
 
 == License

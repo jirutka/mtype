@@ -14,3 +14,4 @@ install:
   - script/bootstrap
 script:
   - script/test
+  - lua bench.lua

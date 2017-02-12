@@ -30,7 +30,7 @@ void *luaL_testudata (lua_State *L, int i, const char *tname) {
 
 static int mtype(lua_State *L) {
     luaL_checkany(L, 1);
-    luaL_checkstack(L, 3, "not enough stack slots");
+    luaL_checkstack(L, 2, "not enough stack slots");
 
     int t = lua_type(L, 1);
 
@@ -40,11 +40,10 @@ static int mtype(lua_State *L) {
         && luaL_getmetafield(L, 1, "__type")) {
 
         if (lua_isfunction(L, 2)) {
-            // lua_call pops values out of stack, so we must copy it to be able
-            // to fallback to type() when func returns nil.
-            lua_pushvalue(L, 1);
+            lua_insert(L, -2);  // swap func and value on stack
             lua_call(L, 1, 1);
 
+            // If the func returned nil, fallback to raw type.
             if (lua_isnil(L, -1)) {
                 lua_pushstring(L, lua_typename(L, t));
             }
@@ -53,7 +52,7 @@ static int mtype(lua_State *L) {
         lua_getglobal(L, "io");
         lua_getfield(L, 2, "type");
         lua_remove(L, 2);  // remove io
-        lua_insert(L, -2);  // swap func and value
+        lua_insert(L, -2);  // swap func and value on stack
         lua_call(L, 1, 1);
     } else {
         lua_pushstring(L, lua_typename(L, t));

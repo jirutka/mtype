@@ -4,19 +4,6 @@ readonly PKG_NAME='mtype'
 readonly TEMP_DIR="$(pwd)/.tmp"
 readonly VENV_DIR="$(pwd)/.venv"
 
-ask() {
-	local msg="$1"
-	local default="$2"
-
-	printf '\n%s [%s] ' "$msg" "$default"
-	local answer; read answer
-
-	case "${answer:="$default"}" in
-		y | yes) return 0;;
-		*) return 1;;
-	esac
-}
-
 einfo() {
 	# bold cyan
 	printf '\033[1;36m> %s\033[0m\n' "$@" >&2

@@ -1,5 +1,7 @@
 sudo: false
 env:
+  global:
+    secure: 0/i0vaXk6LVUzzhOiWc8WeZllNetjo0oPoLAfTWs8DTDUaEKSrNsb2RneJF4JACuVm9+TFQl4huOkXJgQz7MSZsAqNxO0ZtEqsAZTYrW8m+yBU6a63/WNqgBPlzVsDTfUdV9lhMvz9fsXISQoWkzzoqC7zjrUdYEf8IzMiNyPNk07BOyDJuaUjg2S02OwgSV+BXTdGAE5GpZZ+Yk7DVaXpy4DILkwnDy+nXf3tWG7xlqzlVdKTFeSQrHsRBmJCsf3ou7vZ3qE4rVXUZgYwBg9/du2FJ3O9ZUhzyzx3o/er/HSPHvKd4rRzs8B2Zn/3t4DOYNsFIcIIyqS/Ku8TsAmQlCIJJMs1l7qm5bIHwoySoIEhNZ/Gf466VgTpMrh69xGhihZxPJPZ35LKKVGQoU1r+4zNTWFWYyBVP+WglXkNPbqHaynHB4WlXmwDNhqUTmZlSqLHGovtClHwI7fQ2wMNxRLq99QYkYArdHCdjaHAMYeFdhr5qjbMAzLHBdxU7bIXlj7BPJRf3dGgdGpHv1WFvubwQ9GCvcMZK15WNT0g+vyk/JkHoOdPwxX0jq396iBEux+Tszde35guyMQ4Nbw4IXCdc8ZLcmlv4qrP0q82cqJlTXCTexB13NRQuZ8kk/BjhgowvaueR5JWOwVwj7EnVD5Q/bBaD4lvMIRKIZS1c=  # LUAROCKS_KEY
   matrix:
     - LUA_VERSION=luajit-2.0
     - LUA_VERSION=luajit-2.1
@@ -15,3 +17,11 @@ install:
 script:
   - script/test
   - lua bench.lua
+deploy:
+  provider: script
+  script: script/deploy-rocks
+  skip_cleanup: true
+  all_branches: true
+  on:
+    condition: |
+      ( "$TRAVIS_BRANCH" = master || "$TRAVIS_TAG" = v* ) && "$LUA_VERSION" = lua-5.3

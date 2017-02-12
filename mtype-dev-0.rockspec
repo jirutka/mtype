@@ -9,9 +9,10 @@ source = {
 }
 
 description = {
-  summary = 'TODO',
+  summary = 'An enhanced type() function that looks for __type metafield',
   detailed = [[
-TODO]],
+mtype is a library that provides an enhanced version of the type function that looks for __type metafield on a table.
+For best performance it's implemented both in Lua (for LuaJIT) and C (for Lua/PUC).]],
   homepage = 'https://github.com/jirutka/mtype',
   maintainer = 'Jakub Jirutka <jakub@jirutka.cz>',
   license = 'MIT',

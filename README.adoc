@@ -10,7 +10,7 @@ ifdef::env-github[]
 image:https://travis-ci.org/{gh-name}.svg?branch={gh-branch}["Build Status", link="https://travis-ci.org/{gh-name}"]
 endif::env-github[]
 
-{name} is a library that provides an enhanced version of the https://www.lua.org/manual/5.3/manual.html#pdf-type[type] function that looks for `__type` metafield on a table.
+{name} is a library that provides an enhanced version of the https://www.lua.org/manual/5.3/manual.html#pdf-type[type] function that looks for `__type` metafield on a table and userdata.
 For best performance it’s implemented both in Lua (for LuaJIT) and C (for Lua/PUC).
 
 
@@ -31,7 +31,7 @@ print(io.type(value))  -- prints 'file'
 
 [source, lua]
 ----
-local type = require 'mtype'
+local type = require('mtype').type
 
 local chair = setmetatable({}, { __type = 'Chair' })
 print(type(chair))  -- prints 'Chair'

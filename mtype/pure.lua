@@ -1,15 +1,16 @@
 ---------
--- Pure-Lua implementation of the mtype function.
+-- Pure-Lua implementation of the mtype functions.
 
 local getmetatable = getmetatable
 local io_type = io.type
 local rawtype = type
 
+
 --- Returns type of the given `value`.
 --
 -- @param value
 -- @treturn string A type of the value.
-return function(value)
+local function type (value)
   local rtype = rawtype(value)
 
   if rtype ~= 'table' and rtype ~= 'userdata' then
@@ -38,3 +39,7 @@ return function(value)
 
   return rtype
 end
+
+return {
+  type = type,
+}

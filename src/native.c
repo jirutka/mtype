@@ -25,10 +25,31 @@ void *luaL_testudata (lua_State *L, int i, const char *tname) {
     }
     return p;
 }
-#endif
+
+// Copied from lua-compat-5.1.
+void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
+    luaL_checkstack(L, nup+1, "too many upvalues");
+
+    for (; l->name != NULL; l++) {
+        int i;
+        lua_pushstring(L, l->name);
+        for (i = 0; i < nup; i++)  {
+            lua_pushvalue(L, -(nup + 1));
+        }
+        lua_pushcclosure(L, l->func, nup);
+        lua_settable(L, -(nup + 3));
+    }
+    lua_pop(L, nup);
+}
+
+// Copied from lua-compat-5.1.
+#define luaL_newlib(L, l) \
+    (lua_newtable((L)),luaL_setfuncs((L), (l), 0))
+
+#endif  // Lua 5.1
 
 
-static int mtype(lua_State *L) {
+static int type(lua_State *L) {
     luaL_checkany(L, 1);
     luaL_checkstack(L, 2, "not enough stack slots");
 
@@ -61,8 +82,14 @@ static int mtype(lua_State *L) {
     return 1;  // number of results
 }
 
+
+static const struct luaL_Reg mtype_funcs[] = {
+    { "type"  , type   },
+    { NULL    , NULL   },
+};
+
 int luaopen_mtype_native(lua_State *L) {
-    lua_pushcfunction(L, mtype);
+    luaL_newlib(L, mtype_funcs);
 
     return 1;  // number of results
 }

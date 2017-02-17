@@ -1,12 +1,15 @@
 #!/usr/bin/env lua
 
 local benchmark = require 'benchmark'
-local mtype_native = require 'mtype.native'
-local mtype_pure = require 'mtype.pure'
+local native = require 'mtype.native'
+local pure = require 'mtype.pure'
 
 -- unpack is not global since Lua 5.3
 local unpack = table.unpack or unpack  --luacheck: std lua51
-local type = type
+
+local type_raw = type
+local type_native = native.type
+local type_pure = pure.type
 
 -- Number of iterations.
 local N = 5000000
@@ -56,15 +59,15 @@ for _, desc in ipairs {
   print('-- '..label)
 
   measure('type', function()
-    type(value)
+    type_raw(value)
   end)
 
   measure('mtype (pure)', function()
-    mtype_pure(value)
+    type_pure(value)
   end)
 
   measure('mtype (native)', function()
-    mtype_native(value)
+    type_native(value)
   end)
 
   print('')

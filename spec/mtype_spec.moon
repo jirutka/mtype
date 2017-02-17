@@ -1,6 +1,6 @@
 
 for impl in *{'pure', 'native'} do
-  mtype = require 'mtype.'..impl
+  mtype = require('mtype.'..impl).type
 
   describe "#{impl}:", ->
     for value in *{ true, false, 42, 'aloha!', {}, -> 'hi!' } do

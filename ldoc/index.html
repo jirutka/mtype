@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>mtype docs</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>mtype</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>mtype</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>mtype</code></h1>
+<p>
+<p>Efficient enhanced types for Lua</p>
+
+<p> There are two equal implementations of this module:</p>
+
+<ul>
+    <li><code>mtype.native</code> written in C, the most efficient option for PUC Lua
+    (the official Lua interpreter),</li>
+    <li><code>mtype.pure</code> written in pure Lua, the most efficient option for LuaJIT.</li>
+</ul>
+</p>
+<p> This module (<a href="index.html#">mtype</a>) detects if you run on LuaJIT (by presence of global
+ variable <code>jit</code>) or PUC and returns <code>mtype.pure</code> or <code>mtype.native</code>.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#type">type (value)</a></td>
+	<td class="summary">Returns (enhanced) type name of the given <em>value</em>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#istype">istype (typename, value)</a></td>
+	<td class="summary">Returns true if (enhanced) type of the given <em>value</em> meets the specified
+ <em>typename</em>.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "type"></a>
+    <strong>type (value)</strong>
+    </dt>
+    <dd>
+
+<p>Returns (enhanced) type name of the given <em>value</em>. </p>
+
+<ul>
+    <li><p>If the <em>value</em> is a table or an userdata with a metatable, then it looks
+    for a metafield <code>__type</code>.</p>
+
+    <ul>
+        <li><p>If the metafield is a string, then it returns it as a type name.</p></li>
+        <li><p>If it's a function, then it calls it with the <em>value</em> as an argument.
+        If the result is not nil, then it returns it as a type name;
+        otherwise continues.</p></li>
+    </ul></li>
+    <li><p>If the <em>value</em> is an IO userdata (file), then it calls <a href="https://www.lua.org/manual/5.1/manual.html#pdf-io.type">io.type</a> and
+    returns result as a type name.</p></li>
+    <li><p>If nothing above applies, then it returns a raw type of the <em>value</em>,
+    i.e. the same as built-in type function.</p></li>
+</ul>
+
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        A type name of the value.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "istype"></a>
+    <strong>istype (typename, value)</strong>
+    </dt>
+    <dd>
+
+<p>Returns true if (enhanced) type of the given <em>value</em> meets the specified
+ <em>typename</em>.  When called with only one argument, partially applied function
+ is returned.</p>
+
+<ul>
+    <li><p>If raw type of the <em>value</em> equals the <em>typename</em>, then it returns true.</p></li>
+    <li><p>If the <em>value</em> is a table or an userdata with a metatable, then it looks
+    for a metafield <code>__istype</code>.</p>
+
+    <ul>
+        <li><p>If the metafield is a function, then it calls it
+        with arguments <em>value, typename</em> and returns the result (the return
+        type <strong>should</strong> be boolean, but it's not checked!).</p></li>
+        <li><p>If a table, then it looks for a key that equals the <em>typename</em>. If
+        there's no such key or its value is false (or nil), then it returns
+        false. Otherwise returns true.</p></li>
+        <li><p>Otherwise raises error.</p></li>
+    </ul></li>
+    <li><p>If nothing above applies, then it calls <a href="index.html#type">type</a> with the <em>value</em>, compares
+    the result with the <em>typename</em> and returns true if equals, false otherwise.</p></li>
+</ul>
+
+
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">typename</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+
+
+        </li>
+        <li><span class="parameter">value</span>
+
+
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span> or <span class="type">function</span></span>
+
+
+
+    </ol>
+
+    <h3>Raises:</h3>
+    If <em>typename</em> is not a string or <em>value</em> is a table with metafield
+   <code>__istype</code> that is not a function or table.
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

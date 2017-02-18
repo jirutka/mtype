@@ -1,4 +1,4 @@
-= mtype – efficient meta types for Lua
+= mtype – efficient enhanced types for Lua
 Jakub Jirutka <https://github.com/jirutka[@jirutka]>
 :source-language: sh
 // custom
@@ -45,6 +45,8 @@ print(type(io.open('/dev/null')))  -- prints 'file'
 {name} is _very_ simple: it looks for a `\__type` metafield on a table.
 If it’s a function, it passes the value to the function and uses the result as the type name.
 If it’s a string, it uses that. If `__type` is `nil` or returns `nil`, the builtin `io.type` or `type` is used.
+
+TODO describe function `istype`
 
 
 == Installation

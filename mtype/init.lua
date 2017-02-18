@@ -12,9 +12,16 @@
 --
 -- @module mtype
 
+local M
+
 -- Load "native" implementation on PUC, "pure" on LuaJIT.
 if jit == nil then
-  return require('mtype.native')
+  M = require('mtype.native')
 else
-  return require('mtype.pure')
+  M = require('mtype.pure')
 end
+
+--- Version of this module in format "x.y.z".
+M._VERSION = '0.0.0'
+
+return M

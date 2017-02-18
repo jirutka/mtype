@@ -5,9 +5,11 @@ Jakub Jirutka <https://github.com/jirutka[@jirutka]>
 :name: mtype
 :gh-name: jirutka/{name}
 :gh-branch: master
+:ldoc-url: https://jirutka.github.io/{name}/ldoc/
 
 ifdef::env-github[]
 image:https://travis-ci.org/{gh-name}.svg?branch={gh-branch}["Build Status", link="https://travis-ci.org/{gh-name}"]
+image:https://img.shields.io/badge/ldoc-docs-blue.svg["LDoc", link="{ldoc-url}"]
 endif::env-github[]
 
 {name} is a library that provides an enhanced version of the https://www.lua.org/manual/5.3/manual.html#pdf-type[type] function that looks for `__type` metafield on a table and userdata.

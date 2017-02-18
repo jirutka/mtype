@@ -1,15 +1,30 @@
 ---------
--- Pure-Lua implementation of the mtype functions.
+-- @module mtype
 
 local getmetatable = getmetatable
 local io_type = io.type
 local rawtype = type
 
 
---- Returns type of the given `value`.
+--- Returns (enhanced) type name of the given *value*.
+--
+-- * If the *value* is a table or an userdata with a metatable, then it looks
+--   for a metafield `__type`.
+--
+--    * If the metafield is a string, then it returns it as a type name.
+--
+--    * If it's a function, then it calls it with the *value* as an argument.
+--      If the result is not nil, then it returns it as a type name;
+--      otherwise continues.
+--
+-- * If the *value* is an IO userdata (file), then it calls `io.type` and
+--   returns result as a type name.
+--
+-- * If nothing above applies, then it returns a raw type of the *value*,
+--   i.e. the same as built-in type function.
 --
 -- @param value
--- @treturn string A type of the value.
+-- @treturn string A type name of the value.
 local function type (value)
   local rtype = rawtype(value)
 
@@ -40,8 +55,27 @@ local function type (value)
   return rtype
 end
 
---- Returns true if the given *value* is of the specified (enhanced) *type*.
--- When called with only one argument, partially applied function is returned.
+--- Returns true if (enhanced) type of the given *value* meets the specified
+-- *typename*. When called with only one argument, partially applied function
+-- is returned.
+--
+-- * If raw type of the *value* equals the *typename*, then it returns true.
+--
+-- * If the *value* is a table or an userdata with a metatable, then it looks
+--   for a metafield `__istype`.
+--
+--    * If the metafield is a function, then it calls it
+--      with arguments *value, typename* and returns the result (the return
+--      type **should** be boolean, but it's not checked!).
+--
+--    * If a table, then it looks for a key that equals the *typename*. If
+--      there's no such key or its value is false (or nil), then it returns
+--      false. Otherwise returns true.
+--
+--    * Otherwise raises error.
+--
+-- * If nothing above applies, then it calls `type` with the *value*, compares
+--   the result with the *typename* and returns true if equals, false otherwise.
 --
 -- @tparam string typename
 -- @param ?value
@@ -90,6 +124,7 @@ local function istype (...)
   return type(value) == typename
 end
 
+--- @export
 return {
   type = type,
   istype = istype,

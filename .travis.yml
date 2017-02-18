@@ -17,6 +17,9 @@ install:
 script:
   - script/test
   - lua bench.lua
+after_success:
+  - script/travis-decrypt
+  - script/deploy-docs
 deploy:
   provider: script
   script: script/deploy-rocks

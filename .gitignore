@@ -4,3 +4,4 @@
 *.rock
 *.o
 *.so
+/.deploykey
